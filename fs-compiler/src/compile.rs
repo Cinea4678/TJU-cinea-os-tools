@@ -65,6 +65,8 @@ pub fn compile(pathname: &str, output_filename: &str) {
         let root_path = path::PathBuf::from(pathname);
 
         copy_files_recursive(root_dir, &root_path);
+
+        fs.unmount().unwrap();
     } else {
         println!("fatal error: cannot open output file '{}'", output_filename);
         exit(1);
