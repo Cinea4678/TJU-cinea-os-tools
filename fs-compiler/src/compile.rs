@@ -61,10 +61,8 @@ pub fn compile(pathname: &str, output_filename: &str) {
         .create(true)
         .open(output_filename)
     {
-        let buf_stream = fscommon::BufStream::new(&img_file);
-        fatfs::format_volume(buf_stream,fatfs::FormatVolumeOptions::new()).unwrap();
-        let buf_stream = fscommon::BufStream::new(&img_file);
-        let fs = fatfs::FileSystem::new(buf_stream, fatfs::FsOptions::new()).unwrap();
+        fatfs::format_volume(&img_file,fatfs::FormatVolumeOptions::new()).unwrap();
+        let fs = fatfs::FileSystem::new(&img_file, fatfs::FsOptions::new()).unwrap();
         let root_dir = fs.root_dir();
         let root_path = path::PathBuf::from(pathname);
 
