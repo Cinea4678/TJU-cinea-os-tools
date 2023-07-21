@@ -29,6 +29,7 @@ where
                 0=>{
                     let mut sub_path=PathBuf::from(real_path);
                     sub_path.push(entry.file_name());
+                    // println!("{:?}->{:?}", entry.file_name(), sub_path);
 
                     let sub_dir = fs_dir.create_dir(entry.file_name().to_str().unwrap()).unwrap();
 
@@ -37,7 +38,8 @@ where
                 1=>{
                     let mut sub_path=PathBuf::from(real_path);
                     sub_path.push(entry.file_name());
-                    let file_content = fs::read(sub_path).unwrap();
+                    let file_content = fs::read(&sub_path).unwrap();
+                    // println!("{:?}->{:?}", entry.file_name(), sub_path);
 
                     let mut sub_file = fs_dir.create_file(entry.file_name().to_str().unwrap()).unwrap();
 
@@ -59,7 +61,9 @@ pub fn compile(pathname: &str, output_filename: &str) {
         .create(true)
         .open(output_filename)
     {
-        let buf_stream = fscommon::BufStream::new(img_file);
+        let buf_stream = fscommon::BufStream::new(&img_file);
+        fatfs::format_volume(buf_stream,fatfs::FormatVolumeOptions::new()).unwrap();
+        let buf_stream = fscommon::BufStream::new(&img_file);
         let fs = fatfs::FileSystem::new(buf_stream, fatfs::FsOptions::new()).unwrap();
         let root_dir = fs.root_dir();
         let root_path = path::PathBuf::from(pathname);
