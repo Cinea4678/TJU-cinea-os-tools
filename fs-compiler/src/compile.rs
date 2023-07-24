@@ -3,6 +3,7 @@ use std::{
     path::{self, PathBuf},
     process::exit
 };
+use std::io::Write;
 
 fn is_directory(entry: &DirEntry) -> usize {
     let file_type = entry.file_type();
