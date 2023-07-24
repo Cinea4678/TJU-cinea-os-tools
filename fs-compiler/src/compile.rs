@@ -1,8 +1,7 @@
-use fscommon;
 use std::{
     fs::{self, DirEntry},
     path::{self, PathBuf},
-    process::exit, io::Write,
+    process::exit
 };
 
 fn is_directory(entry: &DirEntry) -> usize {
@@ -21,7 +20,7 @@ fn is_directory(entry: &DirEntry) -> usize {
 
 pub fn copy_files_recursive<T>(fs_dir: fatfs::Dir<T>, real_path: &path::PathBuf)
 where
-    T: fatfs::ReadWriteSeek,
+    T: fatfs::ReadWriteSeek
 {
     for entry in fs::read_dir(real_path).unwrap() {
         if let Ok(entry) = entry {
@@ -55,13 +54,13 @@ where
 pub fn compile(pathname: &str, output_filename: &str) {
     println!("Compiling {} to {}", pathname, output_filename);
 
-    if let Ok(img_file) = std::fs::OpenOptions::new()
+    if let Ok(mut img_file) = std::fs::OpenOptions::new()
         .read(true)
         .write(true)
         .create(true)
         .open(output_filename)
     {
-        fatfs::format_volume(&img_file,fatfs::FormatVolumeOptions::new().fat_type(fatfs::FatType::Fat32)).unwrap();
+        fatfs::format_volume(&mut img_file, fatfs::FormatVolumeOptions::new().fat_type(fatfs::FatType::Fat32)).unwrap();
         let fs = fatfs::FileSystem::new(&img_file, fatfs::FsOptions::new()).unwrap();
         let root_dir = fs.root_dir();
         let root_path = path::PathBuf::from(pathname);
